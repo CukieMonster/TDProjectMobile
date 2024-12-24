@@ -1,10 +1,14 @@
 package com.tdproject.main;
 
+import lombok.Getter;
+
 public class Modifiers {
 
     private Modifiers() {
 
     }
+    @Getter
+    private static int multipleUpgradePaths = 1;
     private static int dropRate = 100;             //in %, will be multiplied with Enemy.value
     private static int rareDropRate;
     private static int legendaryDropRate;

@@ -5,19 +5,21 @@ import com.tdproject.graphics.Sprite;
 public enum UpgradeType {
 
     // TODO: do not allow splash and aoe
-    DAMAGE(Sprite.SpriteId.UPGRADE_DAMAGE),
-    SPEED(Sprite.SpriteId.UPGRADE_SPEED),
-    RANGE(Sprite.SpriteId.UPGRADE_RANGE),
-    SPLASH(Sprite.SpriteId.UPGRADE_SPLASH),
-    SLOW(Sprite.SpriteId.UPGRADE_SLOW),
-    DAMAGE_OVER_TIME(Sprite.SpriteId.UPGRADE_DOT),
-    AREA_OF_EFFECT(Sprite.SpriteId.UPGRADE_AOE);
+    DAMAGE(Sprite.SpriteId.UPGRADE_DAMAGE, "Damage"),
+    SPEED(Sprite.SpriteId.UPGRADE_SPEED, "Attack Speed"),
+    RANGE(Sprite.SpriteId.UPGRADE_RANGE, "Attack Range"),
+    SPLASH(Sprite.SpriteId.UPGRADE_SPLASH, "Splash Damage"),
+    SLOW(Sprite.SpriteId.UPGRADE_SLOW, "Slow"),
+    DAMAGE_OVER_TIME(Sprite.SpriteId.UPGRADE_DOT, "Damage over Time"),
+    AREA_OF_EFFECT(Sprite.SpriteId.UPGRADE_AOE, "Area of Effect");
     // MORE_MONEY_PER_KILL ???
 
     final Sprite.SpriteId spriteId;
+    final String displayName;
 
-    UpgradeType(Sprite.SpriteId spriteId) {
+    UpgradeType(Sprite.SpriteId spriteId, String displayName) {
         this.spriteId = spriteId;
+        this.displayName = displayName;
     }
 
 }

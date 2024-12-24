@@ -21,12 +21,13 @@ import java.util.Map;
 import java.util.Objects;
 import javax.vecmath.Vector2d;
 
-public class TowerManager {
+public class TowerManager implements UpgradeHandling {
 
     private static TowerManager instance;
     private final int maxTowers = 50;
 
     private final ButtonPanel buildingButtons;
+    @Getter
     private final ButtonPanel upgradeButtons;
     private final Map<UpgradeType, Text> upgradeLevels = new EnumMap<>(UpgradeType.class);
     private final TextPanel towerInfo;
@@ -42,29 +43,9 @@ public class TowerManager {
 
     private TowerManager() {
         buildingButtons = new ButtonPanel(1720, 490, 100, 980, BuildingButtons.buttons);
-        upgradeButtons = new ButtonPanel(1720, 490, 100, 980, createUpgrageButtons());
+        upgradeButtons = new ButtonPanel(1720, 490, 100, 980, createUpgradeButtons());
         towerInfo = new TextPanel(1845, 490, 150, 980, createTowerInfoText());
-        initializeUpgradeLevelTexts();
-    }
-
-    private Button[] createUpgrageButtons() {
-        Button[] upgradeButtons = new Button[UpgradeType.values().length];
-        int i = 0;
-        for (UpgradeType upgradeType : UpgradeType.values()) {
-            upgradeButtons[i++] = new Button(
-                    upgradeType.spriteId,
-                    b -> upgradeSelectedTower(upgradeType)
-            );
-        }
-        return upgradeButtons;
-    }
-
-    private void upgradeSelectedTower(UpgradeType upgradeType) {
-        int currentLevel = selectedTower.getUpgrades().getOrDefault(upgradeType, 0);
-        int upgradeCost = 5 * (currentLevel + 1);
-        if (Playing.getInstance().adjustMoney(upgradeCost)) {
-            selectedTower.upgrade(upgradeType);
-        }
+        initializeUpgradeLevelTexts(upgradeLevels);
     }
 
     public void update(int u) {
@@ -75,7 +56,7 @@ public class TowerManager {
             mode = TowerManagerMode.UPGRADING;
             for (UpgradeType upgradeType : UpgradeType.values()) {
                 int level = Objects.requireNonNullElse(selectedTower.getUpgrades().get(upgradeType), 0);
-                upgradeLevels.get(upgradeType).setString(String.valueOf(level));
+                upgradeLevels.get(upgradeType).setString(level + ", " + selectedTower.getCost());
             }
         }
         for (Tower t : towers) {
@@ -206,35 +187,11 @@ public class TowerManager {
             case DEFAULT -> buildingButtons.draw(o);
             case BUILDING -> buildingButtons.draw(o);
             case UPGRADING -> {
+                toggleActiveUpgradeButtons();
                 upgradeButtons.draw(o);
                 towerInfo.draw(o);
                 upgradeLevels.forEach((u, t) -> t.draw(o));
             }
-        }
-    }
-
-    private Text[] createTowerInfoText() {
-        Text[] towerInfo = new Text[UpgradeType.values().length];
-        int i = 0;
-        for (UpgradeType upgradeType : UpgradeType.values()) {
-            towerInfo[i] = new Text(upgradeType.toString());
-            i++;
-        }
-        return towerInfo;
-    }
-
-    private void initializeUpgradeLevelTexts() {
-        int i = 0;
-        for (UpgradeType upgradeType : UpgradeType.values()) {
-            Button button = upgradeButtons.getContent()[i++];
-            Vector2d position = button.getPosition();
-            upgradeLevels.put(upgradeType, new Text(
-                    "0",
-                    15,
-                    Text.Color.RED,
-                    (int) position.x + (button.getSprite().getWidth() / 2),
-                    (int) position.y
-            ));
         }
     }
 

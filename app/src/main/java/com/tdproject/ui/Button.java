@@ -46,7 +46,7 @@ public class Button extends Sprite {
     }
 
     public boolean mouseReleased(MyEvent e) {
-        if (visible && isIn(e)) {
+        if (visible & active && isIn(e)) {
             activate();
             return true;
         }

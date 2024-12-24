@@ -90,7 +90,7 @@ public class Tower extends Button {
         if (areaOfEffectMultiplier == 0.0) {
             areaOfEffectMultiplier = 1;
         }
-        damage = (int) ((DAMAGE[towerType] + upgrades.getOrDefault(UpgradeType.DAMAGE, 0)) * areaOfEffectMultiplier);
+        damage = (int) ((DAMAGE[towerType] + 20 * upgrades.getOrDefault(UpgradeType.DAMAGE, 0)) * areaOfEffectMultiplier);
         attackSpeed = ATTACK_SPEED[towerType] - (0.02 * upgrades.getOrDefault(UpgradeType.SPEED, 0));
         double range = RANGE[towerType] + (0.1 * upgrades.getOrDefault(UpgradeType.RANGE, 0));
         radius = (FIELD_SIZE / 2) + (int) (FIELD_SIZE * range);
