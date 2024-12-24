@@ -10,12 +10,18 @@ import java.util.List;
 import java.util.Map;
 import javax.vecmath.Vector2d;
 
+import static com.tdproject.towers.TowerParameters.MAX_UPGRADE_LEVEL;
+
 public interface UpgradeHandling {
 
     ButtonPanel getUpgradeButtons();
     Tower getSelectedTower();
 
     private void upgradeSelectedTower(UpgradeType upgradeType) {
+        Integer upgradeLevel = getSelectedTower().getUpgrades().get(upgradeType);
+        if (upgradeLevel != null && upgradeLevel >= MAX_UPGRADE_LEVEL) {
+            return;
+        }
         if (Playing.getInstance().adjustMoney(-getSelectedTower().getCost())) {
             getSelectedTower().upgrade(upgradeType);
         }

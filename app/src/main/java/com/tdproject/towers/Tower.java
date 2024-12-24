@@ -4,8 +4,15 @@ import static com.tdproject.main.FieldParameters.FIELD_SIZE;
 import static com.tdproject.towers.TowerParameters.ATTACK_SPEED;
 import static com.tdproject.towers.TowerParameters.COST;
 import static com.tdproject.towers.TowerParameters.DAMAGE;
+import static com.tdproject.towers.TowerParameters.DAMAGE_UPGRADE;
+import static com.tdproject.towers.TowerParameters.DOT_UPGRADE;
+import static com.tdproject.towers.TowerParameters.MAX_UPGRADE_LEVEL;
 import static com.tdproject.towers.TowerParameters.MISSILE_SPEED;
 import static com.tdproject.towers.TowerParameters.RANGE;
+import static com.tdproject.towers.TowerParameters.RANGE_UPGRADE;
+import static com.tdproject.towers.TowerParameters.SLOW_UPGRADE;
+import static com.tdproject.towers.TowerParameters.SPEED_UPGRADE;
+import static com.tdproject.towers.TowerParameters.SPLASH_UPGRADE;
 
 import com.tdproject.enemies.Enemy;
 import com.tdproject.enemies.EnemyManager;
@@ -90,13 +97,13 @@ public class Tower extends Button {
         if (areaOfEffectMultiplier == 0.0) {
             areaOfEffectMultiplier = 1;
         }
-        damage = (int) ((DAMAGE[towerType] + 20 * upgrades.getOrDefault(UpgradeType.DAMAGE, 0)) * areaOfEffectMultiplier);
-        attackSpeed = ATTACK_SPEED[towerType] - (0.02 * upgrades.getOrDefault(UpgradeType.SPEED, 0));
-        double range = RANGE[towerType] + (0.1 * upgrades.getOrDefault(UpgradeType.RANGE, 0));
+        damage = (int) ((DAMAGE[towerType] + Math.pow(DAMAGE_UPGRADE, upgrades.getOrDefault(UpgradeType.DAMAGE, 0))) * areaOfEffectMultiplier);
+        attackSpeed = ATTACK_SPEED[towerType] - (SPEED_UPGRADE * upgrades.getOrDefault(UpgradeType.SPEED, 0));
+        double range = RANGE[towerType] + (RANGE_UPGRADE * upgrades.getOrDefault(UpgradeType.RANGE, 0));
         radius = (FIELD_SIZE / 2) + (int) (FIELD_SIZE * range);
-        splash = (int) (0.1 * upgrades.getOrDefault(UpgradeType.SPLASH, 0) * radius);
-        slow = (int) ((10 * upgrades.getOrDefault(UpgradeType.SLOW, 0)) * areaOfEffectMultiplier);
-        damageOverTime = (int) ((upgrades.getOrDefault(UpgradeType.DAMAGE_OVER_TIME, 0)) * areaOfEffectMultiplier);
+        splash = (int) (SPLASH_UPGRADE * upgrades.getOrDefault(UpgradeType.SPLASH, 0) * radius);
+        slow = (int) ((SLOW_UPGRADE * upgrades.getOrDefault(UpgradeType.SLOW, 0)) * areaOfEffectMultiplier);
+        damageOverTime = (int) ((DOT_UPGRADE * upgrades.getOrDefault(UpgradeType.DAMAGE_OVER_TIME, 0)) * areaOfEffectMultiplier);
     }
 
     private void attemptShot(int u) {

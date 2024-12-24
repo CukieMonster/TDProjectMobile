@@ -6,6 +6,7 @@ import static com.tdproject.main.FieldParameters.X_FIELDS;
 import static com.tdproject.main.FieldParameters.Y_CENTERED_OFFSET;
 import static com.tdproject.main.FieldParameters.Y_FIELDS;
 
+import com.tdproject.gamestates.MainMenu;
 import com.tdproject.gamestates.Playing;
 import com.tdproject.graphics.Sprite;
 import com.tdproject.items.Item;
@@ -44,7 +45,7 @@ public class Enemy extends Sprite {
 
     public Enemy(Square spawn, int enemyType) {
         this.enemyType = enemyType;
-        maxHP = EnemyParameters.MAX_HP[enemyType];
+        maxHP = (int) (EnemyParameters.MAX_HP[enemyType] * (1 + MainMenu.getInstance().getDifficulty() / 10.0));
         HP = maxHP;
         speed = EnemyParameters.SPEEDS[EnemyParameters.SPEED_TIER[enemyType]];
         value = EnemyParameters.VALUE[enemyType];

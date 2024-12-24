@@ -5,7 +5,7 @@ public final class EnemyParameters {
     private EnemyParameters() {
 
     }
-    public static final int WAVE_GROWTH = 3;
+    public static final double WAVE_GROWTH = 1.5;
     public static final int SPAWN_INTERVAL = 60;    //updates between enemy spawns
     public static final int WAVE_INTERVAL = 60 * 5; //updates between waves
     public static final int[] VALUE = { 2, 5, 10, 15, 20 };
