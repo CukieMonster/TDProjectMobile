@@ -101,12 +101,12 @@ public class Enemy extends Sprite {
 
     public void applySlow(int slowPercentage, int duration) {
         slow = 1.0 - (slowPercentage / 100.0);
-        slowDuration = Game.getInstance().getUpdateCycle() + (duration * Game.getInstance().getUPS_SET());
+        slowDuration = Game.getInstance().getUpdateCycle() + (duration * Game.UPS_SET);
     }
 
     public void applyDamageOverTime(int damageOverTime, int duration) {
         this.damageOverTime = damageOverTime;
-        damageOverTimeDuration = Game.getInstance().getUpdateCycle() + (duration * Game.getInstance().getUPS_SET());
+        damageOverTimeDuration = Game.getInstance().getUpdateCycle() + (duration * Game.UPS_SET);
     }
 
     void dropItem(Item newItem) {

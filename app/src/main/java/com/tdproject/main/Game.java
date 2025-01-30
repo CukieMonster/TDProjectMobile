@@ -14,7 +14,7 @@ public class Game {
     @Getter(AccessLevel.NONE)
     private static Game instance;
 //    private final int FPS_SET = 60;
-    private final int UPS_SET = 60;
+    public static final int UPS_SET = 60;
     private int updateCycle;
 //    private int updates;
 
@@ -65,10 +65,6 @@ public class Game {
             case PAUSED:
                 break;
         }
-    }
-
-    public int getUpsSet() {
-        return UPS_SET;
     }
 
 }

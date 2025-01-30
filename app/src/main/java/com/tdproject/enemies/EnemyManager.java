@@ -27,7 +27,7 @@ public class EnemyManager {
     private boolean wavesFinished = false;
     private boolean skip = false;
     private boolean spawning = false;
-    private int spawnTime = 0;
+    private int spawnTime = 20 * Game.UPS_SET;
     //public List<Enemy> firstList = new LinkedList<>();
     //public List<Item> droppedItems = new LinkedList<>();
 
@@ -36,9 +36,7 @@ public class EnemyManager {
 
     private EnemyManager(Button skipButton) {
         this.skipButton = skipButton;
-        //GameObjectList.enemyManager = this;
-        //importImg();
-        spawnWave();
+        this.skipButton.setVisible(true);
     }
 
     public static EnemyManager getInstance() {

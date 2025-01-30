@@ -107,7 +107,7 @@ public class Tower extends Button {
     }
 
     private void attemptShot(int u) {
-        if (lastShot + attackSpeed * Game.getInstance().getUpsSet() <= u) {
+        if (lastShot + attackSpeed * Game.UPS_SET <= u) {
             if (upgrades.containsKey(UpgradeType.AREA_OF_EFFECT)) {
                 applyAreaOfEffect();
                 lastShot = u;
