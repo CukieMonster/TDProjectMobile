@@ -46,8 +46,10 @@ public abstract class Sprite {
 
         BUTTON_FAST_FORWARD(null, R.drawable.fast_forward_default),
         BUTTON_SKIP(null, R.drawable.skip_default),
+        BUTTON_PAUSE(null, R.drawable.pause_default),
         BUTTON_CANCEL_BUILD(null, R.drawable.cancel_building_default),
         BUTTON_BUILD_TOWER_1(null, R.drawable.build_tower_1_default),
+        BUTTON_DELETE_TOWER(null, R.drawable.delete_default),
 
         TOWER_1(null, R.drawable.tower_blue_0_default),
         MISSILE(null, R.drawable.homing_missile),

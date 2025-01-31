@@ -70,7 +70,7 @@ public interface UpgradeHandling {
         int usedUpgradePaths = 0;
         List<UpgradeType> unusedUpgradeTypes = new ArrayList<>();
         for (UpgradeType upgradeType : UpgradeType.values()) {
-            Integer upgradeLevel = getSelectedTower().getUpgrades().get(upgradeType);
+            Integer upgradeLevel = getSelectedTower().getUpgrades().get(upgradeType);   // TODO: possible NPE
             if (upgradeLevel != null && upgradeLevel > 0) {
                 usedUpgradePaths++;
             } else {

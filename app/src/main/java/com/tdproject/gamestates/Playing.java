@@ -37,7 +37,7 @@ public class Playing extends GameState {
     private final Sprite background;
 
     private Playing() {
-        playingButtons = new ButtonPanel(1795, 1030, 250, 100, PlayingButtons.buttons, 2);
+        playingButtons = new ButtonPanel(1795, 950, 250, 180, PlayingButtons.buttons, 2);
         background = new Background();
     }
 
@@ -89,8 +89,21 @@ public class Playing extends GameState {
     }
 
     public void changeGameSpeed() {
-        if (gameSpeed == 1) gameSpeed = 2;
-        else if (gameSpeed == 2) gameSpeed = 1;
+        if (gameSpeed == 1) {
+            gameSpeed = 2;
+        }
+        else if (gameSpeed == 2) {
+            gameSpeed = 1;
+        }
+    }
+
+    public void pause() {
+        if (gameSpeed == 0) {
+            gameSpeed = 1;
+        }
+        else {
+            gameSpeed = 0;
+        }
     }
 
     private void drawDroppedItems(Object o) {

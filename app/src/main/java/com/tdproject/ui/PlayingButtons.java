@@ -17,6 +17,10 @@ public class PlayingButtons {
             new Button(
                     Sprite.SpriteId.BUTTON_FAST_FORWARD,
                     i -> Playing.getInstance().changeGameSpeed()
+            ),
+            new Button(
+                    Sprite.SpriteId.BUTTON_PAUSE,
+                    i -> Playing.getInstance().pause()
             )
     };
 

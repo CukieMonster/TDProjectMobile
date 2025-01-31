@@ -27,6 +27,7 @@ public class GameWindow extends SurfaceView implements SurfaceHolder.Callback {
         gameMobile.startGameLoop();
 
         setFocusable(true);
+        setKeepScreenOn(true);
     }
 
     @Override

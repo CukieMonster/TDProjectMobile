@@ -11,6 +11,10 @@ public class ButtonPanel extends GeneralPanel<Button> {
 
     //private final int[][] positions;
 
+    public ButtonPanel(int xCenterPos, int yCenterPos, int width, int height, Button button) {
+        this(xCenterPos, yCenterPos, width, height, new Button[]{button});
+    }
+
     public ButtonPanel(int xCenterPos, int yCenterPos, int width, int height, Button[] buttons) {
         super(xCenterPos, yCenterPos, width, height, buttons);
     }

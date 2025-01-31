@@ -12,7 +12,6 @@ import com.tdproject.graphics.TextPanel;
 import com.tdproject.inputs.MyEvent;
 import com.tdproject.main.Square;
 import com.tdproject.ui.BuildingButtons;
-import com.tdproject.ui.Button;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,13 +23,16 @@ import javax.vecmath.Vector2d;
 public class TowerManager implements UpgradeHandling {
 
     private static TowerManager instance;
-    private final int maxTowers = 50;
+    private final int maxTowers = X_FIELDS * Y_FIELDS;
 
-    private final ButtonPanel buildingButtons;
+    private final ButtonPanel buildingButtonPanel;
+    private final ButtonPanel cancelBuildingButtonPanel;
+    private final ButtonPanel deleteButtonPanel;
     @Getter
     private final ButtonPanel upgradeButtons;
-    private final Map<UpgradeType, Text> upgradeLevels = new EnumMap<>(UpgradeType.class);
     private final TextPanel towerInfo;
+
+    private final Map<UpgradeType, Text> upgradeLevels = new EnumMap<>(UpgradeType.class);
     private final Tower[] towers = new Tower[maxTowers];
     private int towerNr;
 
@@ -42,7 +44,9 @@ public class TowerManager implements UpgradeHandling {
     private TowerManagerMode mode = TowerManagerMode.DEFAULT;
 
     private TowerManager() {
-        buildingButtons = new ButtonPanel(1720, 490, 100, 980, BuildingButtons.buttons);
+        buildingButtonPanel = new ButtonPanel(1720, 490, 100, 980, BuildingButtons.BUILD_TOWER_BUTTON);
+        cancelBuildingButtonPanel = new ButtonPanel(1720, 490, 100, 100, BuildingButtons.CANCEL_BUILDING_BUTTON);
+        deleteButtonPanel = new ButtonPanel(1620, 100, 100, 100, BuildingButtons.DELETE_TOWER_BUTTON);
         upgradeButtons = new ButtonPanel(1720, 490, 100, 980, createUpgradeButtons());
         towerInfo = new TextPanel(1845, 490, 150, 980, createTowerInfoText());
         initializeUpgradeLevelTexts(upgradeLevels);
@@ -67,15 +71,30 @@ public class TowerManager implements UpgradeHandling {
     }
 
     public void enterBuildMode(int towerType) {
+        for (int i = 0; i < towers.length; i++) {
+            if (towers[i] == null) {
+                towerNr = i;
+            }
+        }
         mode = TowerManagerMode.BUILDING;
-        BuildingButtons.setBuildMode(true);
         towers[towerNr] = new Tower(towerType);
     }
 
     public void cancelBuild() {
         towers[towerNr] = null;
-        BuildingButtons.setBuildMode(false);
         mode = TowerManagerMode.DEFAULT;
+    }
+
+    public void deleteTower() {
+        for (int i = 0; i < towers.length; i++) {
+            if (towers[i] == selectedTower) {
+                Square square = towers[i].getSquare();
+                Playing.getInstance().getCollisionMap()[square.getX()][square.getY()] = false;
+                Pathfinding.getInstance().buildDistanceField();
+                towers[i] = null;
+                return;
+            }
+        }
     }
 
     private void moveTower(Vector2d mousePos) {
@@ -100,30 +119,21 @@ public class TowerManager implements UpgradeHandling {
         if (!checkSquare(square)) {
             return;
         }
-        Playing.getInstance().getCollisionMap()[square.getX()][square.getY()] = true;
-        if (!Pathfinding.getInstance().buildDistanceField()) {
-            //Can't build tower here
-            Playing.getInstance().getCollisionMap()[square.getX()][square.getY()] = false;
-            return;
-        }
         if (!Playing.getInstance().adjustMoney(-COST[towers[towerNr].getTowerType()])) {
             // not enough money
             // TODO: visual feedback
             Playing.getInstance().getCollisionMap()[square.getX()][square.getY()] = false;
             return;
         }
+        Playing.getInstance().getCollisionMap()[square.getX()][square.getY()] = true;
+        if (!Pathfinding.getInstance().buildDistanceField()) {
+            //Can't build tower here
+            Playing.getInstance().getCollisionMap()[square.getX()][square.getY()] = false;
+            return;
+        }
         towers[towerNr].initBounds();
         towers[towerNr].setActive(true);
-        //show dropped main.tdproject.items
-        //show time buttons
-//        ButtonManager.getInstance().setBuildButtons(true);
-//        ButtonManager.getInstance().setCancelButton(false);
-        for (Button button : BuildingButtons.buttons) {
-            button.setVisible(true);
-        }
-        BuildingButtons.CANCEL_BUILDING_BUTTON.setVisible(false);
         mode = TowerManagerMode.DEFAULT;
-        towerNr++;
     }
 
     private boolean checkSquare(Square square) {
@@ -139,7 +149,7 @@ public class TowerManager implements UpgradeHandling {
     public void mouseReleased(MyEvent e) {
         switch (mode) {
             case DEFAULT -> {
-                buildingButtons.mouseReleased(e);
+                buildingButtonPanel.mouseReleased(e);
                 for (Tower tower : towers) {
                     if (tower == null || !tower.isActive()) {
                         continue;
@@ -150,9 +160,10 @@ public class TowerManager implements UpgradeHandling {
             case BUILDING -> {
                 moveTower(new Vector2d(e.getX(), e.getY()));
                 buildTower();
-                buildingButtons.mouseReleased(e);
+                cancelBuildingButtonPanel.mouseReleased(e);
             }
             case UPGRADING -> {
+                deleteButtonPanel.mouseReleased(e);
                 if (!upgradeButtons.mouseReleased(e)) {
                     selectedTower = null;
                     setMode(TowerManagerMode.DEFAULT);
@@ -163,12 +174,15 @@ public class TowerManager implements UpgradeHandling {
 
     public void mouseMoved(MyEvent e) {
         switch (mode) {
-            case DEFAULT -> buildingButtons.mouseMoved(e);
+            case DEFAULT -> buildingButtonPanel.mouseMoved(e);
             case BUILDING -> {
-                buildingButtons.mouseMoved(e);
+                cancelBuildingButtonPanel.mouseMoved(e);
                 moveTower(new Vector2d(e.getX(), e.getY()));
             }
-            case UPGRADING -> upgradeButtons.mouseMoved(e);
+            case UPGRADING -> {
+                deleteButtonPanel.mouseMoved(e);
+                upgradeButtons.mouseMoved(e);
+            }
         }
     }
 
@@ -184,10 +198,11 @@ public class TowerManager implements UpgradeHandling {
             }
         }
         switch (mode) {
-            case DEFAULT -> buildingButtons.draw(o);
-            case BUILDING -> buildingButtons.draw(o);
+            case DEFAULT -> buildingButtonPanel.draw(o);
+            case BUILDING -> cancelBuildingButtonPanel.draw(o);
             case UPGRADING -> {
                 toggleActiveUpgradeButtons();
+                deleteButtonPanel.draw(o);
                 upgradeButtons.draw(o);
                 towerInfo.draw(o);
                 upgradeLevels.forEach((u, t) -> t.draw(o));

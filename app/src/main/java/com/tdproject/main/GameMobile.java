@@ -3,6 +3,8 @@ package com.tdproject.main;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import com.tdproject.gamestates.Playing;
+
 // This class has specific Android functionality
 public class GameMobile implements Runnable {
 
@@ -56,9 +58,12 @@ public class GameMobile implements Runnable {
             }
 
             if (deltaU >= 1) {
+                deltaU--;
+                if (Playing.getInstance().getGameSpeed() == 0) {
+                    continue;
+                }
                 Game.getInstance().update(updates);
                 updates++;
-                deltaU--;
             }
         }
     }
